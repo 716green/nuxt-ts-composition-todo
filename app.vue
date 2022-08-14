@@ -27,67 +27,102 @@ const addTask = () => {
   newTask.value = "";
 };
 
-const removeTask = (i: number) => todos.splice(i, 1);
+const removeTask = (id: number) => {
+  const idx = todos.findIndex((todo) => todo.id === id);
+  todos.splice(idx, 1);
+};
 
-const completeTask = (i: number) => (todos[i].status = "complete");
+const completeTask = (id: number) => {
+  const idx = todos.findIndex((todo) => todo.id === id);
+  todos[idx].status = "complete";
+};
 </script>
 
 <template>
   <div>
-    <h1 style="width: 100%; text-align: center">Todos</h1>
-    <form @submit.prevent style="display: flex">
-      <input
-        style="width: 100%; font-size: 3rem"
-        type="text"
-        v-model="newTask"
-      />
-      <button style="font-size: 2rem; color: gray" @click="addTask">+</button>
+    <h1>Todos</h1>
+    <form @submit.prevent>
+      <input type="text" v-model="newTask" />
+      <button @click="addTask">+</button>
     </form>
     <section v-if="todos.length">
-      <h2 v-if="pendingTodos.length" style="text-align: center">Pending</h2>
-      <ul style="padding: 0 1rem">
-        <li v-for="(todo, i) in pendingTodos" :key="i" style="list-style: none">
+      <h2 v-if="pendingTodos.length">Pending</h2>
+      <ul>
+        <li v-for="(todo, i) in pendingTodos" :key="i">
           <div class="task-wrapper">
-            <h3 style="margin: auto 0">{{ todo.task }}</h3>
+            <h3>{{ todo.task }}</h3>
 
-            <div id="buttons" style="display: flex; width: 110px">
-              <button class="btn-action" @click="removeTask(i)">
-                <span style="margin: auto"> ❌ </span>
+            <div id="buttons" class="btn-wrapper">
+              <button class="btn-action" @click="removeTask(todo.id)">
+                <span class="btn-text"> ❌ </span>
               </button>
-              <button class="btn-action" @click="completeTask(i)">
-                <span style="margin: auto"> ✅ </span>
+              <button class="btn-action" @click="completeTask(todo.id)">
+                <span class="btn-text"> ✅ </span>
               </button>
             </div>
           </div>
         </li>
       </ul>
       <hr v-if="completedTodos.length && pendingTodos.length" />
-      <h2 v-if="completedTodos.length" style="text-align: center">Completed</h2>
-      <ul id="complete-todos" style="padding: 0 1rem">
-        <li
-          v-for="(todo, i) in completedTodos"
-          :key="i"
-          style="list-style: none"
-        >
+      <h2 v-if="completedTodos.length">Completed</h2>
+      <ul id="complete-todos">
+        <li v-for="(todo, i) in completedTodos" :key="i">
           <div class="task-wrapper">
-            <h3 style="margin: auto 0">{{ todo.task }}</h3>
+            <h3>{{ todo.task }}</h3>
 
-            <div id="buttons" style="display: flex; width: 110px">
-              <button class="btn-action-complete" @click="removeTask(i)">
-                <span style="margin: auto"> ❌ </span>
+            <div id="buttons" class="btn-wrapper">
+              <button class="btn-action-complete" @click="removeTask(todo.id)">
+                <span class="btn-text"> ❌ </span>
               </button>
             </div>
           </div>
         </li>
       </ul>
     </section>
-    <h2 style="text-align: center" v-else>No Tasks</h2>
+    <h2 v-else>No Tasks</h2>
   </div>
 </template>
 
 <style>
 @import url("https://cdn.jsdelivr.net/npm/water.css@2/out/dark.min.css");
+h1 {
+  width: 100%;
+  text-align: center;
+}
+h2 {
+  text-align: center;
+}
+h3 {
+  margin: auto 0;
+}
+ul {
+  padding: 0 1rem;
+}
+li {
+  list-style: none;
+}
 
+form {
+  display: flex;
+}
+
+form input {
+  width: 100%;
+  font-size: 3rem;
+}
+
+form buttono {
+  font-size: 2rem;
+  color: gray;
+}
+
+.btn-wrapper {
+  display: flex;
+  width: 110px;
+}
+.btn-text {
+  margin: auto;
+}
 .btn-action {
   padding: 0;
   width: 50px;
